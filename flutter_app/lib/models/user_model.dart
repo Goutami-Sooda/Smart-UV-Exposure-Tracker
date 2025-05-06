@@ -1,32 +1,73 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+
 class UserModel {
   final String uid;
-  final String email;
+  final String name;
+  final int age;
+  final String gender;
   final String skinType;
-  final double cumulativeExposure;
-  final DateTime lastUpdated;
+  final String email;
+  final double currentUVIndex;
+  final Duration lastExposureDuration;
+  final DateTime createdAt;
 
   UserModel({
     required this.uid,
-    required this.email,
+    required this.name,
+    required this.age,
+    required this.gender,
     required this.skinType,
-    required this.cumulativeExposure,
-    required this.lastUpdated,
+    required this.email,
+    required this.currentUVIndex,
+    required this.lastExposureDuration,
+    required this.createdAt,
   });
 
-  Map<String, dynamic> toMap() => {
+  Map<String, dynamic> toJson() => {
     'uid': uid,
-    'email': email,
+    'name': name,
+    'age': age,
+    'gender': gender,
     'skinType': skinType,
-    'cumulativeExposure': cumulativeExposure,
-    'lastUpdated': lastUpdated,
+    'email': email,
+    'currentUVIndex': currentUVIndex,
+    'lastExposureDuration': lastExposureDuration.inSeconds,
+    'createdAt': createdAt.toIso8601String(),
   };
 
-  factory UserModel.fromMap(Map<String, dynamic> map) => UserModel(
+  factory UserModel.fromJson(Map<String, dynamic> map) => UserModel(
     uid: map['uid'],
-    email: map['email'],
+    name: map['name'],
+    age: map['age'],
+    gender: map['gender'],
     skinType: map['skinType'],
-    cumulativeExposure: (map['cumulativeExposure'] ?? 0).toDouble(),
-    lastUpdated: (map['lastUpdated'] as Timestamp).toDate(),
+    email: map['email'],
+    currentUVIndex: (map['currentUVIndex'] ?? 0).toDouble(),
+    lastExposureDuration: Duration(seconds: map['lastExposureDuration'] ?? 0),
+    createdAt: DateTime.parse(map['createdAt']),
   );
+
+  UserModel copyWith({
+    String? uid,
+    String? name,
+    int? age,
+    String? gender,
+    String? skinType,
+    String? email,
+    double? currentUVIndex,
+    Duration? lastExposureDuration,
+    DateTime? createdAt,
+  }) {
+    return UserModel(
+      uid: uid ?? this.uid,
+      name: name ?? this.name,
+      age: age ?? this.age,
+      gender: gender ?? this.gender,
+      skinType: skinType ?? this.skinType,
+      email: email ?? this.email,
+      currentUVIndex: currentUVIndex ?? this.currentUVIndex,
+      lastExposureDuration: lastExposureDuration ?? this.lastExposureDuration,
+      createdAt: createdAt ?? this.createdAt,
+    );
+  }
 }

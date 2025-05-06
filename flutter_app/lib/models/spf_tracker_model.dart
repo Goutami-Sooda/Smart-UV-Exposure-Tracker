@@ -15,19 +15,19 @@ class SpfTrackerModel {
     required this.uvIndexAtTime,
   });
 
-  Map<String, dynamic> toMap() => {
-    'uid': uid,
-    'spfLevel': spfLevel,
-    'appliedAt': appliedAt,
-    'expiresAt': expiresAt,
-    'uvIndexAtTime': uvIndexAtTime,
-  };
+  Map<String, dynamic> toJson() => {
+        'uid': uid,
+        'spfLevel': spfLevel,
+        'appliedAt': Timestamp.fromDate(appliedAt),
+        'expiresAt': Timestamp.fromDate(expiresAt),
+        'uvIndexAtTime': uvIndexAtTime,
+      };
 
-  factory SpfTrackerModel.fromMap(Map<String, dynamic> map) => SpfTrackerModel(
-    uid: map['uid'],
-    spfLevel: map['spfLevel'],
-    appliedAt: (map['appliedAt'] as Timestamp).toDate(),
-    expiresAt: (map['expiresAt'] as Timestamp).toDate(),
-    uvIndexAtTime: (map['uvIndexAtTime'] ?? 0).toDouble(),
-  );
+  factory SpfTrackerModel.fromJson(Map<String, dynamic> map) => SpfTrackerModel(
+        uid: map['uid'],
+        spfLevel: map['spfLevel'],
+        appliedAt: (map['appliedAt'] as Timestamp).toDate(),
+        expiresAt: (map['expiresAt'] as Timestamp).toDate(),
+        uvIndexAtTime: (map['uvIndexAtTime'] ?? 0).toDouble(),
+      );
 }
