@@ -104,7 +104,6 @@ class SignUpProvider extends BaseViewModel {
         skinType: skinType,
         email: email,
         currentUVIndex: 0.0,
-        lastExposureDuration: Duration.zero,
         createdAt: DateTime.now(),
       );
 

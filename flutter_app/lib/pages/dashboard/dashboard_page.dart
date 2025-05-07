@@ -14,7 +14,7 @@ class DashboardPage extends LayoutWidget {
 
   @override
   String breakTabTitle(BuildContext context) {
-    return AppLocalizations.of(context)!.dashboard; // or "Dashboard" directly
+    return AppLocalizations.of(context)!.dashboard;
   }
 
   @override
@@ -35,9 +35,12 @@ class DashboardPage extends LayoutWidget {
               SizedBox(height: 10),
               ExposureTimerWidget(),
               SizedBox(height: 20),
-              Text("SPF Tracker", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-              SPFSelectorWidget(),
+              Text("SPF Protection Status", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+              SizedBox(height: 10),
+              SPFSelectorWidget(), // <-- shows active/expired + button to update
               SizedBox(height: 20),
+              Text("Personalized Recommendation", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+              SizedBox(height: 10),
               RecommendationWidget(),
             ],
           ),
