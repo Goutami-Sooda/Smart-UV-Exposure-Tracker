@@ -1,7 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../models/user_model.dart';
-import '../models/spf_tracker_model.dart';
-import '../models/exposure_model.dart';
 
 class FirestoreService {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
@@ -25,9 +23,9 @@ class FirestoreService {
     await _db.collection('users').doc(uid).delete();
   }
 
-  /// SPF TRACKING SUBCOLLECTION ----------------------
+  // SPF TRACKING SUBCOLLECTION ----------------------
 
-  Future<void> addSPFTracking(String uid, SpfTrackerModel spfData) async {
+  Future<void> addSPFTracking(String uid, SPFTrackerModel spfData) async {
     await _db
         .collection('users')
         .doc(uid)
@@ -36,9 +34,9 @@ class FirestoreService {
         .set(spfData.toJson());
   }
 
-  Future<List<SpfTrackerModel>> getSPFTracking(String uid) async {
+  Future<List<SPFTrackerModel>> getSPFTracking(String uid) async {
     final snapshot = await _db.collection('users').doc(uid).collection('spfTracking').get();
-    return snapshot.docs.map((doc) => SpfTrackerModel.fromJson(doc.data())).toList();
+    return snapshot.docs.map((doc) => SPFTrackerModel.fromJson(doc.data())).toList();
   }
 
   /// UV EXPOSURE SUBCOLLECTION -----------------------
@@ -68,4 +66,5 @@ class FirestoreService {
         .snapshots()
         .map((snapshot) => snapshot.docs.map((doc) => ExposureModel.fromJson(doc.data())).toList());
   }
+
 }

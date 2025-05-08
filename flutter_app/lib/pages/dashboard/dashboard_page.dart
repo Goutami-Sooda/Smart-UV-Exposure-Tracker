@@ -48,6 +48,7 @@ int calculateSafeExposureTime(double med, double uvIndex) {
   @override
   String breakTabTitle(BuildContext context) {
     return AppLocalizations.of(context)!.dashboard;
+    return AppLocalizations.of(context)!.dashboard;
   }
 
   @override
