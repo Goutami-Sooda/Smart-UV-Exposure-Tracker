@@ -28,7 +28,7 @@ import 'package:flareline/pages/history/history_page.dart';
 typedef PathWidgetBuilder = Widget Function(BuildContext, String?);
 
 final List<Map<String, Object>> MAIN_PAGES = [
-  {'routerPath': '/', 'widget': const EcommercePage()},
+  {'routerPath': '/', 'widget': DeferredWidget(signIn.loadLibrary, () => signIn.SignInWidget())},
   {'routerPath': '/dashboard', 'widget': DashboardPage()},
   {'routerPath': '/calendar', 'widget': DeferredWidget(calendar.loadLibrary, () => calendar.CalendarPage())},
   {'routerPath': '/profile', 'widget': DeferredWidget(profile.loadLibrary, () => profile.ProfilePage())},
