@@ -130,27 +130,31 @@ class ExposureLogModel {
   final DateTime exposureEnd;
   final double uvIndex;
   final Duration duration;
+  final DateTime logDate;
 
   ExposureLogModel({
     required this.exposureStart,
     required this.exposureEnd,
     required this.uvIndex,
     required this.duration,
+    required this.logDate,
   });
 
   Map<String, dynamic> toJson() => {
-    'exposureStart': exposureStart.toIso8601String(),
-    'exposureEnd': exposureEnd.toIso8601String(),
-    'uvIndex': uvIndex,
-    'duration': duration.inSeconds,
-  };
+        'exposureStart': exposureStart.toIso8601String(),
+        'exposureEnd': exposureEnd.toIso8601String(),
+        'uvIndex': uvIndex,
+        'duration': duration.inSeconds,
+        'logDate': logDate.toIso8601String(),
+      };
 
   factory ExposureLogModel.fromJson(Map<String, dynamic> map) {
     return ExposureLogModel(
       exposureStart: DateTime.parse(map['exposureStart']),
       exposureEnd: DateTime.parse(map['exposureEnd']),
-      uvIndex: map['uvIndex'] ?? 0.0,
+      uvIndex: (map['uvIndex'] ?? 0).toDouble(),
       duration: Duration(seconds: map['duration'] ?? 0),
+      logDate: DateTime.parse(map['logDate']),
     );
   }
 }

@@ -1,4 +1,3 @@
-import 'package:flareline/services/ble_uv_service.dart';
 import 'package:flareline_uikit/core/mvvm/base_viewmodel.dart';
 import 'package:flareline_uikit/utils/snackbar_util.dart';
 import 'package:flutter/material.dart';
@@ -44,7 +43,7 @@ class SignInProvider extends BaseViewModel {
       SnackBarUtil.showSuccess(context, 'Signed in successfully!');
 
       //  Connect to BLE UV device before navigating
-      BLEUVService().connectAndListenForUV();
+
 
       Navigator.of(context).pushNamed('/'); // Navigate to dashboard or home
     }
