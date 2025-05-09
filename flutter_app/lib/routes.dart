@@ -22,6 +22,7 @@ import 'package:flareline/pages/table/tables_page.dart' deferred as tables;
 import 'package:flareline/pages/spf_tracker/spf_tracker_page.dart' deferred as spfTracker;
 
 
+
 import 'package:flareline/pages/dashboard/dashboard_page.dart';
 import 'package:flareline/pages/history/history_page.dart';
 
@@ -40,6 +41,8 @@ final List<Map<String, Object>> MAIN_PAGES = [
   {'routerPath': '/formLayout', 'widget': DeferredWidget(formLayout.loadLibrary, () => formLayout.FormLayoutPage())},
   {'routerPath': '/signIn', 'widget': DeferredWidget(signIn.loadLibrary, () => signIn.SignInWidget())},
   {'routerPath': '/signUp', 'widget': DeferredWidget(signUp.loadLibrary, () => signUp.SignUpWidget())},
+  
+  // {'routerPath': '/signUp/skintypeSurvey', 'widget': DeferredWidget(skintypeSurvey.loadLibrary, () => skintypeSurvey.SkinDetectionSurveyPage())},
   {
     'routerPath': '/resetPwd',
     'widget': DeferredWidget(resetPwd.loadLibrary, () => resetPwd.ResetPwdWidget()),
