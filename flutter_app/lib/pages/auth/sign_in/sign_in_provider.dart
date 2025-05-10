@@ -13,14 +13,6 @@ class SignInProvider extends BaseViewModel {
     passwordController = TextEditingController();
   }
 
-  // Future<void> signInWithGoogle(BuildContext context) async {
-  //   SnackBarUtil.showSnack(context, 'Sign In With Google');
-  // }
-
-  // Future<void> signInWithGithub(BuildContext context) async {
-  //   SnackBarUtil.showSnack(context, 'Sign In With Github');
-  // }
-
 
   Future<void> signIn(BuildContext context) async {
   final email = emailController.text.trim();
@@ -41,9 +33,6 @@ class SignInProvider extends BaseViewModel {
 
     if (context.mounted) {
       SnackBarUtil.showSuccess(context, 'Signed in successfully!');
-
-      //  Connect to BLE UV device before navigating
-
 
       Navigator.of(context).pushNamed('/dashboard'); // Navigate to dashboard or home
     }

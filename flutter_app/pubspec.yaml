@@ -33,14 +33,26 @@ dependencies:
 
   flutter_localizations:
     sdk: flutter
-# firebase 
 
-  firebase_core: ^2.32.0
-  cloud_firestore: ^4.17.5
-  firebase_storage: ^11.7.7
-  firebase_auth: ^4.0.0
-  firebase_messaging: ^14.0.0
+  # firebase
+  firebase_core: ^3.13.0   # Updated for SDK 35 compatibility
+  cloud_firestore: ^5.6.7  # Updated for SDK 35 compatibility
+  firebase_storage: ^12.4.5 # Updated for SDK 35 compatibility
+  firebase_auth: ^5.5.3   # Updated for SDK 35 compatibility
+  firebase_messaging: ^15.2.5  # Updated for SDK 35 compatibility
+#  firebase_core: ^2.32.0
+#  cloud_firestore: ^4.17.5
+#  firebase_storage: ^11.7.7
+#  firebase_auth: ^4.0.0
+#  firebase_messaging: ^14.0.0
   fl_chart: ^0.64.0
+
+#  tflite_flutter: ^0.10.3
+  tflite_flutter: ^0.11.0
+
+
+
+  image: ^4.0.17
 
   flutter_blue_plus: ^1.5.0
 
@@ -52,13 +64,18 @@ dependencies:
 
   popover: ^0.2.9
 
-  syncfusion_flutter_charts: ^27.1.58
+#  syncfusion_flutter_charts: ^27.1.58
+#
+#  syncfusion_flutter_datagrid: ^27.1.58
+#
+#  syncfusion_flutter_maps: ^27.1.58
+#
+#  syncfusion_flutter_calendar: ^27.1.58
 
-  syncfusion_flutter_datagrid: ^27.1.58
-
-  syncfusion_flutter_maps: ^27.1.58
-
-  syncfusion_flutter_calendar: ^27.1.58
+  syncfusion_flutter_charts: ^29.1.41  # Updated for SDK 35 compatibility
+  syncfusion_flutter_datagrid: ^29.1.41  # Updated for SDK 35 compatibility
+  syncfusion_flutter_maps: ^29.1.41  # Updated for SDK 35 compatibility
+  syncfusion_flutter_calendar: ^29.1.41  # Updated for SDK 35 compatibility
 
   transparent_image: ^2.0.1
 
@@ -78,7 +95,8 @@ dependencies:
 
   window_manager: ^0.3.8
 
-  intl: ^0.20.0
+#  intl: ^0.20.0
+  intl: ^0.20.2  # Removed override, updated for SDK 35 compatibility
 
   avatar_glow: ^3.0.1
 
@@ -148,7 +166,7 @@ flutter:
   assets:
     - assets/
     - assets/brand/
-    - assets//cards/
+    - assets/cards/
     - assets/country/
     - assets/cover/
     - assets/icon/
@@ -165,6 +183,8 @@ flutter:
     - assets/api/
     - assets/ai/
     - assets/crm/
+    - assets/model/skin_type_model.tflite
+
   #   - assets/a_dot_burr.jpeg
   #   - assets/a_dot_ham.jpeg
 

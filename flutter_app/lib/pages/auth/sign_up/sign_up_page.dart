@@ -89,80 +89,176 @@ class SignUpWidget extends BaseWidget<SignUpProvider> {
   }
 
   Widget _formWidget(BuildContext context, SignUpProvider viewModel) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 50),
-      child: SingleChildScrollView(
-        child: ConstrainedBox(
-          constraints: BoxConstraints(
-            minHeight: MediaQuery.of(context).size.height * 0.6,
+    String? selectedInputMethod;
+
+    return StatefulBuilder(
+      builder: (context, setState) {
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20.0),
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(height: 40),
+                OutBorderTextFormField(
+                  labelText: 'Name',
+                  hintText: 'Enter your full name',
+                  controller: viewModel.nameController,
+                ),
+                const SizedBox(height: 16),
+
+                OutBorderTextFormField(
+                  labelText: 'Age',
+                  hintText: 'Enter your age',
+                  keyboardType: TextInputType.number,
+                  controller: viewModel.ageController,
+                ),
+                const SizedBox(height: 16),
+
+                Text('Gender', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
+                const SizedBox(height: 8),
+                Row(
+                  children: [
+                    Expanded(
+                      child: RadioListTile<String>(
+                        title: const Text('Male'),
+                        value: 'Male',
+                        groupValue: viewModel.genderController.text,
+                        onChanged: (value) {
+                          viewModel.genderController.text = value!;
+                          setState(() {});
+                        },
+                      ),
+                    ),
+                    Expanded(
+                      child: RadioListTile<String>(
+                        title: const Text('Female'),
+                        value: 'Female',
+                        groupValue: viewModel.genderController.text,
+                        onChanged: (value) {
+                          viewModel.genderController.text = value!;
+                          setState(() {});
+                        },
+                      ),
+                    ),
+                    Expanded(
+                      child: RadioListTile<String>(
+                        title: const Text('Other'),
+                        value: 'Other',
+                        groupValue: viewModel.genderController.text,
+                        onChanged: (value) {
+                          viewModel.genderController.text = value!;
+                          setState(() {});
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 16),
+
+                OutBorderTextFormField(
+                  labelText: 'Email',
+                  hintText: 'Enter email',
+                  keyboardType: TextInputType.emailAddress,
+                  controller: viewModel.emailController,
+                ),
+                const SizedBox(height: 16),
+
+                OutBorderTextFormField(
+                  obscureText: true,
+                  labelText: 'Password',
+                  hintText: 'Enter password',
+                  controller: viewModel.passwordController,
+                ),
+                const SizedBox(height: 16),
+
+                OutBorderTextFormField(
+                  obscureText: true,
+                  labelText: 'Retype Password',
+                  hintText: 'Confirm password',
+                  controller: viewModel.rePasswordController,
+                ),
+                const SizedBox(height: 20),
+
+                Text("How would you like to provide your skin type?"),
+                ListTile(
+                  title: const Text("Upload Photo"),
+                  leading: Radio<String>(
+                    value: "photo",
+                    groupValue: selectedInputMethod,
+                    onChanged: (value) => setState(() {
+                      selectedInputMethod = value;
+                    }),
+                  ),
+                ),
+                ListTile(
+                  title: const Text("Take Survey"),
+                  leading: Radio<String>(
+                    value: "survey",
+                    groupValue: selectedInputMethod,
+                    onChanged: (value) => setState(() {
+                      selectedInputMethod = value;
+                    }),
+                  ),
+                ),
+                const SizedBox(height: 20),
+
+                ButtonWidget(
+                  type: ButtonType.primary.type,
+                  btnText: 'Next',
+                  onTap: () {
+                    final name = viewModel.nameController.text.trim();
+                    final age = viewModel.ageController.text.trim();
+                    final gender = viewModel.genderController.text.trim();
+                    final email = viewModel.emailController.text.trim();
+                    final password = viewModel.passwordController.text.trim();
+                    final rePassword = viewModel.rePasswordController.text.trim();
+
+                    if (name.isEmpty ||
+                        age.isEmpty ||
+                        gender.isEmpty ||
+                        email.isEmpty ||
+                        password.isEmpty ||
+                        rePassword.isEmpty ||
+                        selectedInputMethod == null) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text("Please fill all fields and select skin type input method.")),
+                      );
+                      return;
+                    }
+
+                    if (password != rePassword) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text("Passwords do not match")),
+                      );
+                      return;
+                    }
+
+                    final userData = {
+                      "name": name,
+                      "age": int.parse(age),
+                      "gender": gender,
+                      "email": email,
+                      "password": password,
+                      "rePassword": rePassword,
+                    };
+
+                    if (selectedInputMethod == "photo") {
+                      Navigator.pushNamed(context, '/skintypePhoto', arguments: userData);
+                    } else {
+                      Navigator.pushNamed(context, '/skintypeSurvey', arguments: userData);
+                    }
+                  },
+                ),
+                const SizedBox(height: 40),
+              ],
+            ),
           ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              OutBorderTextFormField(
-                labelText: 'Name',
-                hintText: 'Enter your full name',
-                controller: viewModel.nameController,
-              ),
-              const SizedBox(height: 16),
-
-              OutBorderTextFormField(
-                labelText: 'Age',
-                hintText: 'Enter your age',
-                keyboardType: TextInputType.number,
-                controller: viewModel.ageController,
-              ),
-              const SizedBox(height: 16),
-
-              OutBorderTextFormField(
-                labelText: 'Gender',
-                hintText: 'Male / Female / Other',
-                controller: viewModel.genderController,
-              ),
-              const SizedBox(height: 16),
-
-              OutBorderTextFormField(
-                labelText: 'Skin Type',
-                hintText: 'e.g., Type I, II, III...',
-                controller: viewModel.skinTypeController,
-              ),
-              const SizedBox(height: 16),
-
-              OutBorderTextFormField(
-                labelText: 'Email',
-                hintText: 'Enter email',
-                keyboardType: TextInputType.emailAddress,
-                controller: viewModel.emailController,
-              ),
-              const SizedBox(height: 16),
-
-              OutBorderTextFormField(
-                obscureText: true,
-                labelText: 'Password',
-                hintText: 'Enter password',
-                controller: viewModel.passwordController,
-              ),
-              const SizedBox(height: 16),
-
-              OutBorderTextFormField(
-                obscureText: true,
-                labelText: 'Retype Password',
-                hintText: 'Confirm password',
-                controller: viewModel.rePasswordController,
-              ),
-              const SizedBox(height: 20),
-
-              ButtonWidget(
-                type: ButtonType.primary.type,
-                btnText: 'Create Account',
-                onTap: () => viewModel.signUp(context),
-              ),
-            ],
-          ),
-        ),
-      ),
+        );
+      },
     );
   }
+
 
 
   @override
@@ -174,3 +270,80 @@ class SignUpWidget extends BaseWidget<SignUpProvider> {
   @override
   bool get isAlignCenter => true;
 }
+
+
+  // Widget _formWidget(BuildContext context, SignUpProvider viewModel) {
+  //   return Padding(
+  //     padding: const EdgeInsets.symmetric(horizontal: 50),
+  //     child: SingleChildScrollView(
+  //       child: ConstrainedBox(
+  //         constraints: BoxConstraints(
+  //           minHeight: MediaQuery.of(context).size.height * 0.6,
+  //         ),
+  //         child: Column(
+  //           crossAxisAlignment: CrossAxisAlignment.start,
+  //           children: [
+  //             OutBorderTextFormField(
+  //               labelText: 'Name',
+  //               hintText: 'Enter your full name',
+  //               controller: viewModel.nameController,
+  //             ),
+  //             const SizedBox(height: 16),
+
+  //             OutBorderTextFormField(
+  //               labelText: 'Age',
+  //               hintText: 'Enter your age',
+  //               keyboardType: TextInputType.number,
+  //               controller: viewModel.ageController,
+  //             ),
+  //             const SizedBox(height: 16),
+
+  //             OutBorderTextFormField(
+  //               labelText: 'Gender',
+  //               hintText: 'Male / Female / Other',
+  //               controller: viewModel.genderController,
+  //             ),
+  //             const SizedBox(height: 16),
+
+  //             OutBorderTextFormField(
+  //               labelText: 'Skin Type',
+  //               hintText: 'e.g., Type I, II, III...',
+  //               controller: viewModel.skinTypeController,
+  //             ),
+  //             const SizedBox(height: 16),
+
+  //             OutBorderTextFormField(
+  //               labelText: 'Email',
+  //               hintText: 'Enter email',
+  //               keyboardType: TextInputType.emailAddress,
+  //               controller: viewModel.emailController,
+  //             ),
+  //             const SizedBox(height: 16),
+
+  //             OutBorderTextFormField(
+  //               obscureText: true,
+  //               labelText: 'Password',
+  //               hintText: 'Enter password',
+  //               controller: viewModel.passwordController,
+  //             ),
+  //             const SizedBox(height: 16),
+
+  //             OutBorderTextFormField(
+  //               obscureText: true,
+  //               labelText: 'Retype Password',
+  //               hintText: 'Confirm password',
+  //               controller: viewModel.rePasswordController,
+  //             ),
+  //             const SizedBox(height: 20),
+
+  //             ButtonWidget(
+  //               type: ButtonType.primary.type,
+  //               btnText: 'Create Account',
+  //               onTap: () => viewModel.signUp(context),
+  //             ),
+  //           ],
+  //         ),
+  //       ),
+  //     ),
+  //   );
+  // }
