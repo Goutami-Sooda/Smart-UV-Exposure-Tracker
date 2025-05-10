@@ -44,72 +44,100 @@ class FirestoreService {
     final user = UserModel.fromJson(doc.data()!);
     return user.spfTracker;
   }
+  
+Future<SPFTrackerModel?> getLatestSPFTracking(String uid) async {
+  final doc = await FirebaseFirestore.instance
+      .collection('users')
+      .doc(uid)
+      .collection('spf_tracker')
+      .doc('latest')
+      .get();
+
+  if (!doc.exists) return null;
+
+  final data = doc.data()!;
+  return SPFTrackerModel(
+    spfValue: data['spfvalue']?.toDouble() ?? 0,
+    appliedAt: (data['appliedAt'] as Timestamp).toDate(),
+    expiresAt: (data['expiresAt'] as Timestamp).toDate(),
+  );
+}
 
   /// Exposure logs are now also embedded
-  Future<void> addUVExposure(String uid, ExposureLogModel uvData) async {
-    final doc = await _db.collection('users').doc(uid).get();
-    if (!doc.exists) return;
-
-    final user = UserModel.fromJson(doc.data()!);
-    final updatedLogs = [...user.exposureLogs, uvData];
-
-    await _db.collection('users').doc(uid).update({
-      'exposureLogs': updatedLogs.map((e) => e.toJson()).toList(),
-    });
-  }
-
-  Future<void> logExposureIfHighUV(String uid, double uvIndex) async {
-  if (uvIndex <= 3) return;
-
+Future<List<ExposureLogModel>> getTodayUVLogs(String uid) async {
   final now = DateTime.now();
   final today = DateTime(now.year, now.month, now.day);
 
-  final exposureLogRef = FirebaseFirestore.instance
-      .collection('users')
-      .doc(uid)
-      .collection('exposureLogs');
-
-  // You can optimize this to get only today's logs
-  final logsSnap = await exposureLogRef
-      .where('logDate', isEqualTo: today.toIso8601String())
-      .get();
-
-  if (logsSnap.docs.isNotEmpty) {
-    // Extend the last log by 30 minutes
-    final last = ExposureLogModel.fromJson(logsSnap.docs.last.data());
-
-    final updated = ExposureLogModel(
-      exposureStart: last.exposureStart,
-      exposureEnd: now,
-      uvIndex: uvIndex,
-      duration: last.duration + const Duration(minutes: 30),
-      logDate: today,
-    );
-
-    await exposureLogRef.doc(logsSnap.docs.last.id).set(updated.toJson());
-  } else {
-    final newLog = ExposureLogModel(
-      exposureStart: now.subtract(const Duration(minutes: 30)),
-      exposureEnd: now,
-      uvIndex: uvIndex,
-      duration: const Duration(minutes: 30),
-      logDate: today,
-    );
-
-    await exposureLogRef.add(newLog.toJson());
-  }
-}
-
-
-  Future<List<ExposureLogModel>> getUVExposure(String uid) async {
   final logsSnap = await _db
       .collection('users')
       .doc(uid)
       .collection('exposureLogs')
+      .where('timestamp', isGreaterThanOrEqualTo: Timestamp.fromDate(today))
+      .orderBy('timestamp')
       .get();
 
   return logsSnap.docs
       .map((doc) => ExposureLogModel.fromJson(doc.data()))
       .toList();
 }
+
+
+Future<List<double>> getWeeklyExposureDurations(String uid) async {
+  final now = DateTime.now();
+  final today = DateTime(now.year, now.month, now.day);
+  final List<double> weeklyData = [];
+
+  for (int i = 0; i < 7; i++) {
+    final day = now.subtract(Duration(days: 6 - i));
+    final start = DateTime(day.year, day.month, day.day);
+    final end = start.add(const Duration(days: 1));
+
+    if (day.isAfter(today)) {
+      weeklyData.add(0); // Add 0 for future dates
+      continue;
+    }
+
+    final snapshot = await _db
+        .collection('users')
+        .doc(uid)
+        .collection('exposureLogs')
+        .where('timestamp', isGreaterThanOrEqualTo: Timestamp.fromDate(start))
+        .where('timestamp', isLessThan: Timestamp.fromDate(end))
+        .orderBy('timestamp')
+        .get();
+
+    final logs = snapshot.docs.map((d) => ExposureLogModel.fromJson(d.data())).toList();
+    Duration total = Duration.zero;
+
+    for (int j = 0; j < logs.length - 1; j++) {
+      if (logs[j].uvIndex > 3) {
+        total += logs[j + 1].timestamp.difference(logs[j].timestamp);
+      }
+    }
+
+    weeklyData.add(total.inMinutes.toDouble());
+  }
+
+  return weeklyData;
+}
+
+
+
+Future<List<ExposureLogModel>> getTodayUVFrom7to7(String uid) async {
+  final now = DateTime.now();
+  final start = DateTime(now.year, now.month, now.day, 7);
+  final end = DateTime(now.year, now.month, now.day, 19);
+
+  final snapshot = await _db
+      .collection('users')
+      .doc(uid)
+      .collection('exposureLogs')
+      .where('timestamp', isGreaterThan: Timestamp.fromDate(start))
+      .where('timestamp', isLessThan: Timestamp.fromDate(end))
+      .orderBy('timestamp')
+      .get();
+
+  return snapshot.docs.map((d) => ExposureLogModel.fromJson(d.data())).toList();
+}
+
 }

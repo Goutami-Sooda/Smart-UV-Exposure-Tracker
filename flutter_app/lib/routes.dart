@@ -24,6 +24,7 @@ import 'package:flareline/pages/auth/sign_up/skintype_detection_photo_page.dart'
 import 'package:flareline/pages/auth/sign_up/skintype_survey_page.dart' deferred as skintypeSurvey;
 
 
+
 import 'package:flareline/pages/dashboard/dashboard_page.dart';
 import 'package:flareline/pages/history/history_page.dart';
 
