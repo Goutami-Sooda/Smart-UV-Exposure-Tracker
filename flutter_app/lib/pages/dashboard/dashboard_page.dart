@@ -196,7 +196,11 @@ class _DashboardContentState extends State<_DashboardContent> {
 
     return CommonCard(
       height: 800,
-      child: Padding(
+      child: Container(
+        decoration: BoxDecoration(
+          color: const Color(0xFFFFFDE7), // Very light yellow
+          borderRadius: BorderRadius.circular(12),
+        ),
         padding: const EdgeInsets.all(16),
         child: SingleChildScrollView(
           child: Column(
@@ -226,8 +230,8 @@ class _DashboardContentState extends State<_DashboardContent> {
                     ElevatedButton(
                       onPressed: () async {
                         await Navigator.pushNamed(context, "/spfTracker");
-                        await loadData(); // Refresh SPF status after returning
-},  
+                        await loadData(); // Refresh SPF status
+                      },
                       child: Text(_isSpfActive ? "Update SPF" : "Apply SPF"),
                     ),
                   ],

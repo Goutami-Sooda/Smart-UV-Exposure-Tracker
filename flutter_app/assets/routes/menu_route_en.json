@@ -1,16 +1,6 @@
 [
   {
-    "groupName": "Project",
-    "menuList": [
-      {
-        "icon": "assets/sidebar/tools.svg",
-        "menuName": "Project",
-        "path": "/tools"
-      }
-    ]
-  },
-  {
-    "groupName": "Widgets",
+    "groupName": "Navigation",
     "menuList": [
       {
         "icon": "assets/sidebar/dashboard.svg",

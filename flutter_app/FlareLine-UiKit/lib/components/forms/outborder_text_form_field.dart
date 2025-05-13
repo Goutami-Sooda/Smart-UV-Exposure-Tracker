@@ -75,22 +75,21 @@ class OutBorderTextFormField extends StatelessWidget {
                     ),
                     labelText: '',
                     border: const OutlineInputBorder(
-                        borderSide: BorderSide(
-                            color: FlarelineColors.border, width: 1)),
+                      borderSide: BorderSide(color: Colors.black, width: 1),
+                    ),
                     enabledBorder: const OutlineInputBorder(
-                        borderSide: BorderSide(
-                            color: FlarelineColors.border, width: 1)),
-                    focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(
-                            color: (focusColor ?? FlarelineColors.primary),
-                            width: 1)),
+                      borderSide: BorderSide(color: Colors.black, width: 1),
+                    ),
+                    focusedBorder: const OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.black, width: 2), // Thicker on focus
+                    ),
                     contentPadding: const EdgeInsets.symmetric(
                       horizontal: 12,
                       vertical: 6,
                     ),
                     floatingLabelBehavior: FloatingLabelBehavior.always,
                     hintText: hintText,
-                    hintStyle: hintStyle
+                    hintStyle: hintStyle,
                   ),
                 ),
               ),

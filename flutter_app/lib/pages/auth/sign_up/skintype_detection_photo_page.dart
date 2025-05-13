@@ -38,8 +38,8 @@ class _SkinDetectionPhotoPageState extends State<SkinDetectionPhotoPage> {
     'Type VI': 'Dark brown to black skin, never burns, tans very easily.',
   };
 
-  Future<void> _pickAndDetectSkinType() async {
-    final pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
+  Future<void> _pickImage(ImageSource source) async {
+    final pickedFile = await ImagePicker().pickImage(source: source);
     if (pickedFile == null) return;
 
     setState(() {
@@ -57,34 +57,6 @@ class _SkinDetectionPhotoPageState extends State<SkinDetectionPhotoPage> {
       _predictedCode = labelToCode[label];
     });
   }
-
-  // Future<String> _runInference(String imagePath) async {
-  //   final interpreter = await Interpreter.fromAsset('assets/model/skin_type_model.tflite');
-  //
-  //   final imageBytes = File(imagePath).readAsBytesSync();
-  //   img.Image? oriImage = img.decodeImage(imageBytes);
-  //   img.Image resizedImage = img.copyResize(oriImage!, width: 224, height: 224);
-  //
-  //   var input = List.generate(1, (i) => List.generate(224, (y) => List.generate(224, (x) => List.filled(3, 0.0))));
-  //   for (int y = 0; y < 224; y++) {
-  //     for (int x = 0; x < 224; x++) {
-  //       final pixel = resizedImage.getPixel(x, y); // Pixel object
-  //
-  //       input[0][y][x][0] = ((pixel.r / 255.0) - 0.5) * 2.0;
-  //       input[0][y][x][1] = ((pixel.g / 255.0) - 0.5) * 2.0;
-  //       input[0][y][x][2] = ((pixel.b / 255.0) - 0.5) * 2.0;
-  //     }
-  //   }
-  //
-  //   var output = List.filled(1 * classLabels.length, 0.0).reshape([1, classLabels.length]);
-  //   interpreter.run(input, output);
-  //
-  //   final scores = List<double>.from(output[0]);
-  //   final predictedIndex = scores.indexWhere((e) => e == scores.reduce((a, b) => a > b ? a : b));
-  //
-  //   // final predictedIndex = scores.indexWhere((e) => e == scores.reduce((a, b) => a > b ? a : b));
-  //   return classLabels[predictedIndex];
-  // }
 
   Future<String> _runInference(String imagePath) async {
     final interpreter = await Interpreter.fromAsset('assets/model/skin_type_model.tflite');
@@ -108,8 +80,6 @@ class _SkinDetectionPhotoPageState extends State<SkinDetectionPhotoPage> {
       }
     }
 
-
-
     var output = List.filled(1 * classLabels.length, 0.0).reshape([1, classLabels.length]);
     interpreter.run(input, output);
 
@@ -119,7 +89,6 @@ class _SkinDetectionPhotoPageState extends State<SkinDetectionPhotoPage> {
     final maxScore = scores.reduce((a, b) => a > b ? a : b);
     final predictedIndex = scores.indexOf(maxScore);
 
-    // final predictedIndex = scores.indexWhere((e) => e == scores.reduce((a, b) => a > b ? a : b));
     return classLabels[predictedIndex];
   }
 
@@ -139,7 +108,7 @@ class _SkinDetectionPhotoPageState extends State<SkinDetectionPhotoPage> {
       name: args['name'],
       age: args['age'],
       gender: args['gender'],
-      skinType: _predictedCode!, // backend-safe code
+      skinType: _predictedCode!,
       email: args['email'],
       password: args['password'],
     );
@@ -167,10 +136,22 @@ class _SkinDetectionPhotoPageState extends State<SkinDetectionPhotoPage> {
             ),
             const SizedBox(height: 16),
 
-            ElevatedButton(
-              onPressed: _pickAndDetectSkinType,
-              child: const Text('Choose Image'),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                ElevatedButton.icon(
+                  onPressed: () => _pickImage(ImageSource.gallery),
+                  icon: const Icon(Icons.photo),
+                  label: const Text('Gallery'),
+                ),
+                ElevatedButton.icon(
+                  onPressed: () => _pickImage(ImageSource.camera),
+                  icon: const Icon(Icons.camera_alt),
+                  label: const Text('Camera'),
+                ),
+              ],
             ),
+
             const SizedBox(height: 24),
 
             if (_selectedImage != null)
@@ -180,6 +161,7 @@ class _SkinDetectionPhotoPageState extends State<SkinDetectionPhotoPage> {
                 decoration: BoxDecoration(border: Border.all()),
                 child: Image.file(_selectedImage!, fit: BoxFit.cover),
               ),
+
             const SizedBox(height: 24),
 
             if (_isDetecting)
